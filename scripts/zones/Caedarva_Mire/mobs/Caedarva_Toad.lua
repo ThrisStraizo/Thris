@@ -10,9 +10,23 @@ entity.onMobSpawn = function(mob)
     mob:setMod(xi.mod.DARK_RES_RANK, 9)
     mob:setMod(xi.mod.DARK_SLEEP_RES_RANK, 9)
     mob:setMod(xi.mod.BLIND_RES_RANK, 9)
-    mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 350)
+    mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 150)
     mob:setMod(xi.mod.REGAIN, 100)
-    mob:setMod(xi.mod.ATT, 110)
+end
+
+entity.onMobWeaponSkill = function(mob, target, skill, action)
+    local skillID = skill:getID()
+
+    if skillID == xi.mobSkill.CALL_OF_THE_GRAVE then
+        mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 350)
+        mob:setLocalVar('enrageTime', GetSystemTime() + 30)
+    end
+end
+
+entity.onMobFight = function(mob, target)
+    if GetSystemTime() > mob:getLocalVar('enrageTime') then
+        mob:setMobMod(xi.mobMod.BASE_DAMAGE_MULTIPLIER, 150)
+    end
 end
 
 entity.onMobDeath = function(mob, player, optParams)
